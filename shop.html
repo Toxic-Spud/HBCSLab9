@@ -247,7 +247,7 @@
       </ul>
       
       <button class="exit" id = empty onclick="zero_basket()">Empty Basket</button>
-      <a id="exiting" href="/"><strong>Exit</strong></a>
+      <a id="exiting" href="/"><strong>Log</strong></a>
       
     </nav>
 
@@ -352,29 +352,22 @@
   <script>
     count = 0
     function addToBasket(movieId) {
-      // Get the movie from data and add to the basket
       const movie = movies.find((movie) => movie.id === movieId);
       if (!movie) return;
       
 
-      // Get the basket from local storage, or just an empty array if it doesn't exist
       const basket = JSON.parse(localStorage.getItem("basket") ?? "[]");
       const existingMovie = basket.find((item) => item.id === movieId);
       if (existingMovie) {
-    // If the movie exists, update its rentDays
           existingMovie.rentDays = parseInt(document.getElementById("days-to-rent-" + movieId).value);
         } 
       else {
-    // If the movie doesn't exist, add it to the basket
         movie.rentDays = parseInt(document.getElementById("days-to-rent-" + movieId).value);
         basket.push(movie);
-        count++; // Increment the basket count
+        count++;
       }
 
-  // Save the updated basket to localStorage
       localStorage.setItem("basket", JSON.stringify(basket));
-
-  // Update the basket count display
       set_basket_num(count);
   }
     function contents(){
