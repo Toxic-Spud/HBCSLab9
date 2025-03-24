@@ -126,6 +126,10 @@
       .login-container span{
         text-align: center;
       }
+      #error-message{
+        font-size: 14px;
+        color: red;
+      }
     </style>
 </head>
 
@@ -141,7 +145,7 @@
 
     <div class="login-container">
         <h2>Login to Movie Rentals</h2>
-
+        <label id="error-message"></label>
         <form id="login-form" action="/shop.html">
             <div class="input-group">
                 <label for="email" >Email</label>
@@ -162,7 +166,23 @@
         <p>&copy; 2024 Movie Rentals | All rights reserved</p>
     </footer>
 
-  
+
+
+<script>
+    document.getElementById("login-form").addEventListener("submit", function(event) {
+    const password = document.getElementById("password").value;
+    const user = document.getElementById("email").value;
+    var users = JSON.parse(localStorage.getItem("users") ?? "[]");
+    const errorMessage = document.getElementById("error-message");
+    if(!(users.find((u) => u[0].toLowerCase() === user.toLowerCase() && u[1] === password)) ){
+        event.preventDefault();
+        errorMessage.textContent = "Incorrect Credentials";
+        document.getElementById("password").textContent("");
+        
+    }
+});
+</script>
+
 
 </body>
 

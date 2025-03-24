@@ -29,7 +29,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 400px;
-            max-height: 300px;
+            max-height: 450px;
             width: 100%;
             min-height: 20vh;
             height: 100%;
@@ -51,6 +51,13 @@
           height: 100%;
             font-size: 14px;
             color: #666;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .input-group span {
+          height: 100%;
+            font-size: 12px;
+            color: red;
             display: block;
             margin-bottom: 8px;
         }
@@ -89,21 +96,7 @@
             background-color: #0056b3;
         }
 
-        .forgot-password {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
 
-        .forgot-password a {
-            font-size: 14px;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
 
         footer {
             margin-top: 30px;
@@ -137,6 +130,10 @@
 
 
       }
+      #error-message{
+        font-size: 14px;
+        color: red;
+      }
       
     </style>
 </head>
@@ -153,7 +150,7 @@
 
     <div class="login-container">
         <h2>Sign-up to Movie Rentals</h2>
-
+        <label id="error-message"></label>
         <form id="login-form" action="/shop.html">
             <div class="input-group">
                 <label for="email" >Email</label>
@@ -162,11 +159,18 @@
 
             <div class="input-group">
                 <label for="password">Password</label>
+                <span>At least 8 characters, 1 upper case, 1 lowwer case, and 1 number</span>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="input-group">
+                <label for="conf">Confirm Password</label>
+                <input type="password" id="conf" name="conf" placeholder="Confirm Password" required>
             </div>
 
             <button type="submit" class="btn">sign-up</button>
         </form>
+        <a href="/"> <span>Already have an account? log in</span></a>
     </div>
 
     <footer>
@@ -175,6 +179,65 @@
 
   
 
+
+
+<script>
+    function validatePassword(password,conf) {
+        const minLength = 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const errorMessage = document.getElementById("error-message");
+        errorMessage.textContent = "";
+
+        if (password.length < minLength) {
+            errorMessage.textContent = "Password must be at least 8 characters long.";
+            return false;
+        }
+        if (!hasUpperCase) {
+            errorMessage.textContent = "Password must contain at least one uppercase letter.";
+            return false;
+        }
+        if (!hasLowerCase) {
+            errorMessage.textContent = "Password must contain at least one lowercase letter.";
+            return false;
+        }
+        if (!hasNumber) {
+            errorMessage.textContent = "Password must contain at least one number.";
+            return false;
+        }
+        if (!(password === conf)){
+            errorMessage.textContent = "Passwords do not match";
+            return false;
+        }
+        return true;
+    }
+
+document.getElementById("login-form").addEventListener("submit", function(event) {
+    const password = document.getElementById("password").value;
+    const user = document.getElementById("email").value;
+    const conf = document.getElementById("conf").value;
+    var users = JSON.parse(localStorage.getItem("users") ?? "[]");
+    const errorMessage = document.getElementById("error-message");
+    if((users.find((u) => u[0].toLowerCase() === user.toLowerCase()))){
+        errorMessage.textContent = "Account already exists please log in";
+        event.preventDefault();
+    }
+    else if (!validatePassword(password, conf)) {
+        event.preventDefault(); 
+    }
+    else{
+        users.push([user,password]);
+        localStorage.setItem("users", JSON.stringify(users));
+    }
+});
+</script>
+
 </body>
+
+
+
+
+
 
 </html>
